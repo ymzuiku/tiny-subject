@@ -1,15 +1,16 @@
 export interface TinySubscribe<T> {
-    unsubscribe: Function;
-    next: (state: T) => any;
+    unsubscribe: () => TinySubscribe<T>;
+    next: (state?: T) => TinySubscribe<T>;
 }
 /**
  * 迷你版的 rxjs 的 Subject
  */
 export default class TinySubject<T> {
-    eventList: any;
+    state: T;
+    constructor(state: T);
+    events: Function[];
     next: (state?: T | undefined) => void;
-    subscribe: (fn: (state: T) => any) => {
-        unsubscribe: () => void;
-        next: (state: T) => void;
-    };
+    setState: (fn: (state: T) => any) => void;
+    subscribe: (fn: (state: T) => any) => TinySubscribe<T>;
+    subscribeMemo: (memo: (state: T) => any[], fn: (state: T) => any) => TinySubscribe<T>;
 }
